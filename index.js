@@ -14,14 +14,13 @@ app.use(express.json());
 app.use(cors());
 
 const uri =
-    "mongodb+srv://valleydb:valleydb@cluster0.pbmsk.mongodb.net/valleydb?retryWrites=true&w=majority";
+    "mongodb+srv://BongoBazar:BongoBazar123@cluster0.pbmsk.mongodb.net/BogoBazarProducts?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
 client.connect((err) => {
-    const productCollection = client.db("valleydb").collection("products");
-    const productCollectionForOrder = client.db("valleydb").collection("orders");
+    const productCollection = client.db("BongoBazar").collection("BogoBazarProducts");
 
     app.get("/events", (req, res) => {
         productCollection.find().toArray((err, items) => {
