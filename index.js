@@ -13,14 +13,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.yd15c.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://BongoVandar:test1234@cluster0.kntbw.mongodb.net/bdbazar?retryWrites=true&w=majority`;
 
-console.log("password testing", process.env.DB_USER, process.env.DB_PASS, process.env.DB_NAME);
+// console.log("password testing", process.env.DB_USER, process.env.DB_PASS, process.env.DB_NAME);
 const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
+
 client.connect((err) => {
+    console.log(err);
     const productCollection = client.db("bdbazar").collection("items");
     const productCollectionForOrder = client.db("bdbazar").collection("order");
 
@@ -34,19 +36,11 @@ client.connect((err) => {
         const newEvent = req.body;
         console.log("adding new event: ", newEvent);
         productCollection.insertOne(newEvent).then((result) => {
-            console.log("inserted count", result.insertedCount);
+            console.log("inserted count", result.insertedCount > 0);
             res.send(result.insertedCount > 0);
         });
     });
 
-    // app.post("/addEvent", (req, res) => {
-    //     const newEvent = req.body;
-    //     console.log("adding new event: ", newEvent);
-    //     productCollection.insertOne(newEvent).then((result) => {
-    //         console.log("inserted count", result.insertedCount);
-    //         res.send(result.insertedCount > 0);
-    //     });
-    // });
 
     app.get("/checkout/:_id", (req, res) => {
         console.log(req.params._id);
