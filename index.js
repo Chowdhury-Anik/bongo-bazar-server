@@ -9,19 +9,20 @@ require("dotenv").config();
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
 
-const uri =
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.hcopb.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.yd15c.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+
+console.log("password testing", process.env.DB_USER, process.env.DB_PASS, process.env.DB_NAME);
 const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
 client.connect((err) => {
-    const productCollection = client.db("BongoVandar").collection("BogoBazarProducts");
-    const productCollectionForOrder = client.db("BongoVandar").collection("Orders");
+    const productCollection = client.db("bdbazar").collection("items");
+    const productCollectionForOrder = client.db("bdbazar").collection("order");
 
     app.get("/events", (req, res) => {
         productCollection.find().toArray((err, items) => {
@@ -37,6 +38,15 @@ client.connect((err) => {
             res.send(result.insertedCount > 0);
         });
     });
+
+    // app.post("/addEvent", (req, res) => {
+    //     const newEvent = req.body;
+    //     console.log("adding new event: ", newEvent);
+    //     productCollection.insertOne(newEvent).then((result) => {
+    //         console.log("inserted count", result.insertedCount);
+    //         res.send(result.insertedCount > 0);
+    //     });
+    // });
 
     app.get("/checkout/:_id", (req, res) => {
         console.log(req.params._id);
